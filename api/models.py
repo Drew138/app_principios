@@ -13,15 +13,17 @@ class Usuario(AbstractUser):
     MASCULINO = 'M'
     FEMENINO = 'F'
     INDEFINIDO = 'I'
-    OPCIONES_GENERO = ((MASCULINO, 'Masculino'),
-                       (FEMENINO, 'Femenino'),
-                       (INDEFINIDO, 'Indefinido'),
-                       )
+    OPCIONES_GENERO = (
+        (MASCULINO, 'Masculino'),
+        (FEMENINO, 'Femenino'),
+        (INDEFINIDO, 'Indefinido'),
+    )
     COMPRADOR = 'C'
     VENDEDOR = 'V'
-    OPCIONES_TIPO = ((COMPRADOR, 'Comprador'),
-                     (VENDEDOR, 'Vendedor'),
-                     )
+    OPCIONES_TIPO = (
+        (COMPRADOR, 'Comprador'),
+        (VENDEDOR, 'Vendedor'),
+    )
 
     genero = models.CharField(
         max_length=1, choices=OPCIONES_GENERO, default=INDEFINIDO)
@@ -51,3 +53,4 @@ class Orden(models.Model):
     cantidad = models.IntegerField(default=0)
     producto = models.ForeignKey(
         Producto, related_name="orden_prod", on_delete=models.SET_NULL, blank=True, null=True)
+    completado = models.BooleanField(default=False)
