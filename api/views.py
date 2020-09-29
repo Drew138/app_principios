@@ -1,3 +1,59 @@
-from django.shortcuts import render
+from rest_framework import viewsets, permissions, generics
+from . import serializers as custom_serializers
+from . import models as custom_models
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
 
-# Create your views here.
+
+class CiudadView(viewsets.ModelViewSet):
+
+    serializer_class = custom_models.Ciudad
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        pass
+
+
+# Get User API
+class UserAPI(generics.RetrieveAPIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = custom_serializers.UsuarioSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
+class RegistroView(generics.GenericAPIView):
+
+    serializer_class = custom_serializers.RegistroSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        refresh = RefreshToken.for_user(self.request.user)  # JWT token
+        return Response({
+            "user": custom_serializers.RegisterVibroUserSerializer(user,
+                                                                   context=self.get_serializer_context()).data,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        })
+
+
+class ProductoView(viewsets.ModelViewSet):
+
+    serializer_class = custom_serializers.ProductoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        pass
+
+
+class OrdenView(viewsets.ModelViewSet):
+
+    serializer_class = custom_serializers.OrdenSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        pass
