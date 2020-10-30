@@ -34,8 +34,9 @@ class RegistroView(generics.GenericAPIView):
         user = serializer.save()
         refresh = RefreshToken.for_user(self.request.user)  # JWT token
         return Response({
-            "user": custom_serializers.RegisterVibroUserSerializer(user,
-                                                                   context=self.get_serializer_context()).data,
+            "user": custom_serializers.RegisterVibroUserSerializer(
+                user,
+                context=self.get_serializer_context()).data,
             "refresh": str(refresh),
             "access": str(refresh.access_token)
         })
