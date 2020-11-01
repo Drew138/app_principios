@@ -12,7 +12,9 @@ auth_views = [
 ]
 
 router = routers.DefaultRouter()
-router.register()
+router.register("usuarios", views.UsersView, "usuarios")
+router.register("productos", views.UsersView, "productos")
+router.register("ordenes", views.UsersView, "ordenes")
 
 
 urlpatterns = auth_views + router.urls

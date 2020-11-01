@@ -2,12 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# class Ciudad(models.Model):
-
-#     nombre = models.CharField(max_length=15)
-#     departamento = models.CharField(max_length=15)
-
-
 class Usuario(AbstractUser):
 
     MASCULINO = 'M'
@@ -29,8 +23,6 @@ class Usuario(AbstractUser):
         max_length=1, choices=OPCIONES_GENERO, default=INDEFINIDO)
     telefono = models.IntegerField(default=0)
     direccion = models.CharField(max_length=30)
-    # ciudad = models.ForeignKey(
-    #     Ciudad, related_name="compradores", on_delete=models.SET_NULL, blank=True, null=True)
     establecimiento = models.CharField(max_length=30, default="n/a")
     tipo = models.CharField(
         max_length=10, choices=OPCIONES_TIPO, default=COMPRADOR)

@@ -5,15 +5,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 
 
-class CiudadView(viewsets.ModelViewSet):
-
-    serializer_class = custom_models.Ciudad
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        pass
-
-
 # Get User API
 class UserAPI(generics.RetrieveAPIView):
 
@@ -22,6 +13,19 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class UsersView(generics.RetrieveAPIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = custom_serializers.UsuarioSerializer
+
+    def get_queryset(self):
+        if self.request.user.tipo == "comprador":
+            queryset = custom_models.Usuario.objects.filter(tipo="vendedor")
+        else:
+            queryset = custom_models.Usuario.objects.filter(tipo="comprador")
+        return queryset
 
 
 class RegistroView(generics.GenericAPIView):
@@ -48,7 +52,10 @@ class ProductoView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        pass
+        vendedor = self.request.query_params.get("vendedor", None)
+        queryset = custom_models.Producto.objects.filter(
+            vendedor__establecimiento=vendedor)
+        return queryset
 
 
 class OrdenView(viewsets.ModelViewSet):
@@ -57,4 +64,10 @@ class OrdenView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        pass
+        if self.request.user.tipo == "comprador":
+            queryset = custom_models.Orden.objects.filter(
+                comprador=self.request.user)
+        else:
+            queryset = custom_models.Orden.objects.filter(
+                producto__vendedor=self.request.user).filter(completado=False)
+        return queryset

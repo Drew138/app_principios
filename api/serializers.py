@@ -2,34 +2,24 @@ from rest_framework import serializers
 from . import models as custom_models
 
 
-class CiudadSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = custom_models.Ciudad
-        fields = '__all__'
-
-
 # view
 class UsuarioSerializer(serializers.ModelSerializer):
-
-    ciudad = CiudadSerializer()
 
     class Meta:
         model = custom_models.Usuario
         fields = [
             'id',
             'username',
-            'email',
-            'ciudad',
+            'telefono',
             "tipo",
             "genero",
+            "establecimiento",
+            "direccion"
         ]
 
 
 # Register Serializer
 class RegistroSerializer(serializers.ModelSerializer):
-
-    ciudad = CiudadSerializer()
 
     class Meta:
         model = custom_models.VibroUser
@@ -37,7 +27,6 @@ class RegistroSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            'email',
             'password',
             'genero',
             'telefono',
@@ -49,7 +38,7 @@ class RegistroSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):
-        user = custom_models.VibroUser.objects.create_user(**validated_data)
+        user = custom_models.Usuario.objects.create_user(**validated_data)
         return user
 
 

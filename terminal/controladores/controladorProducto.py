@@ -1,4 +1,5 @@
 from .controlador import Controlador
+import requests
 
 
 class ControladorProducto(Controlador):
