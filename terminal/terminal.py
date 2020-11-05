@@ -22,29 +22,38 @@ class Terminal:
         print(ControladorUsuario.vendedores)
         vendedor = input("Seleccione un vendedor: ")
         self.controladorProducto.setVendedor(vendedor)
-        while self.controladorProducto.getVendedor() not in self.controladorUsuario.vendedores:
-            print("Vendedor invalido, seleccione de nuevo")
+        while not (self.controladorProducto.getVendedor() in self.controladorUsuario.vendedores):
+            print("Vendedor inválido, seleccione de nuevo")
             print(ControladorUsuario.vendedores)
+            vendedor = input("Seleccione un vendedor: ")
             self.controladorProducto.setVendedor(vendedor)
         accion = input(
             "Desea ver los productos ofrecidos por este Vendedor (Si/No): ").capitalize()
         if accion == "Si":
             self.controladorProducto.obtenerProductos()
             self.mostrarInformacionVendedor()
+            accion = input("Desea agregar un nuevo producto a su órden(Si/No): ").capitalize()
+            while accion == "Si":
+                producto = input("Ingrese el producto que desea agregar")
+                cantidad = input("Ingrese la cantidad que desea agregar de este producto")
+                # TODO agregar actuador para verificar cantidades
+                accion = input("Desea agregar un nuevo producto a su órden(Si/No): ").capitalize()
+
 
     def seleccionarAccionComprador(self):
         accion = input(
-            "Desea ver vendedores, realizar su orden o salir (Vendedores/Orden/Salir): ").capitalize()
-        while (accion != 'Vendedores') or (accion != 'Orden') or (accion != 'Salir'):
+            "Desea ver vendedores, realizar una órden o salir (Vendedores/Órden/Salir): ").capitalize()
+        while (accion != 'Vendedores') or (accion != 'Órden') or (accion != 'Salir'):
             print("Accion invalida, vuelva a intentar")
             accion = input(
-                "Desea ver vendedores, realizar su orden o salir (Vendedores/Orden/Salir): ").capitalize()
+                "Desea ver vendedores, realizar una órden o salir (Vendedores/Órden/Salir): ").capitalize()
         if accion == 'Vendedores':
             self.verVendedores()
-        elif accion == "Orden":
+        elif accion == "Órden":
             self.realizarOrden()
         else:
             self.interfacesAbiertas = 0
+
 
     def verOrdenes(self):
         pass
@@ -56,8 +65,12 @@ class Terminal:
         print(table)
 
     def mostrarInformacionVendedor(self):
+        print(self.controladorProducto.getInformacionVendedor())
         table = prettytable()
         table.fieldnames = ["Marca", "Producto", "Precio", "Disponibilidad"]
+        for producto in self.controladorProducto.getProductos():
+            table.add_row(producto)
+        
         # TODO Mostrar información vendedor
         print(table)
 
@@ -75,17 +88,17 @@ class Terminal:
 
     def seleccionarAccionVendedor(self):
         accion = input(
-            "Desea ver sus ordenes, o salir (Ordenes/Salir): ").capitalize()
-        while (accion != 'Orden') or (accion != 'Salir'):
-            print("Accion invalida, vuelva a intentar")
+            "Desea ver sus órdenes, o salir (Órdenes/Salir): ").capitalize()
+        while (accion != 'Órden') or (accion != 'Salir'):
+            print("Acción inválida, vuelva a intentar")
             accion = input(
-                "Desea ver sus ordenes, o salir (Ordenes/Salir): ").capitalize()
-        if accion == 'Ordenes':
+                "Desea ver sus órdenes, o salir (Órdenes/Salir): ").capitalize()
+        if accion == 'Órdenes':
             self.verOrdenes()
         else:
             self.interfacesAbiertas = 0
 
-    def verificarInformacionUsurio(self):
+    def verificarInformacionUsuario(self):
         pass
 
     def verificarDisponibilidadProducto(self):
@@ -95,7 +108,7 @@ class Terminal:
         accion = input(
             "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
         while accion != "Ingresar" and accion != "Registrarse":
-            print("Accion invalida, intenta de nuevo")
+            print("Acción inválida, intenta de nuevo")
             accion = input(
                 "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
         if accion == "Ingresar":
@@ -110,7 +123,7 @@ class Terminal:
                 self.seleccionarAccionComprador()
             elif self.informacionUsuario['tipo'] == 'Vendedor':
                 self.seleccionarAccionVendedor()
-        print("Se ha cerrado la aplicacion")
+        print("Se ha cerrado la aplicación")
 
 
 def main():
