@@ -12,16 +12,41 @@ class Terminal:
         self.controladorUsuario = ControladorUsuario()
         self.controladorProducto = ControladorProducto(self.controladorUsuario)
         self.controladorOrden = ControladorOrden(self.controladorProducto)
-
         self.interfacesAbiertas = 1
 
-    def enviarInformacion(self):
+    def realizarOrden(self):
         pass
 
     def verVendedores(self):
-        pass
+        self.controladorUsuario.obtenerVendedores()
+        print(ControladorUsuario.vendedores)
+        vendedor = input("Seleccione un vendedor: ")
+        self.controladorProducto.setVendedor(vendedor)
+        while self.controladorProducto.getVendedor() not in self.controladorUsuario.vendedores:
+            print("Vendedor invalido, seleccione de nuevo")
+            print(ControladorUsuario.vendedores)
+            self.controladorProducto.setVendedor(vendedor)
+        accion = input(
+            "Desea ver los productos ofrecidos por este Vendedor (Si/No): ").capitalize()
+        if accion == "Si":
+            self.controladorProducto.obtenerProductos()
+            self.mostrarInformacionVendedor()
 
-    def verCompradores(self):
+    def seleccionarAccionComprador(self):
+        accion = input(
+            "Desea ver vendedores, realizar su orden o salir (Vendedores/Orden/Salir): ").capitalize()
+        while (accion != 'Vendedores') or (accion != 'Orden') or (accion != 'Salir'):
+            print("Accion invalida, vuelva a intentar")
+            accion = input(
+                "Desea ver vendedores, realizar su orden o salir (Vendedores/Orden/Salir): ").capitalize()
+        if accion == 'Vendedores':
+            self.verVendedores()
+        elif accion == "Orden":
+            self.realizarOrden()
+        else:
+            self.interfacesAbiertas = 0
+
+    def verOrdenes(self):
         pass
 
     def mostrarInformacionComprador(self):
@@ -48,39 +73,49 @@ class Terminal:
         # TODO Mostrar información de órden
         print(table)
 
+    def seleccionarAccionVendedor(self):
+        accion = input(
+            "Desea ver sus ordenes, o salir (Ordenes/Salir): ").capitalize()
+        while (accion != 'Orden') or (accion != 'Salir'):
+            print("Accion invalida, vuelva a intentar")
+            accion = input(
+                "Desea ver sus ordenes, o salir (Ordenes/Salir): ").capitalize()
+        if accion == 'Ordenes':
+            self.verOrdenes()
+        else:
+            self.interfacesAbiertas = 0
+
     def verificarInformacionUsurio(self):
         pass
 
     def verificarDisponibilidadProducto(self):
         pass
 
-    def realizarOrden(self):
-        pass
-
-    def terminar(self):
-        self.interfacesAbiertas -= 1
-
     def comenzar(self):
-        accion = input("Desea ingresar o registrarse (Ingresar/Registrarse): ")
+        accion = input(
+            "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
         while accion != "Ingresar" and accion != "Registrarse":
             print("Accion invalida, intenta de nuevo")
             accion = input(
-                "Desea ingresar o registrarse (Ingresar/Registrarse): ")
+                "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
         if accion == "Ingresar":
-            self.usuario.autenticar()
+            self.controladorUsuario.autenticar()
         else:
-            self.usuarios.crearCuenta()
+            self.controladorUsuario.crearCuenta()
+
+    def correr(self):
+        self.comenzar()
         while self.interfacesAbiertas:
             if self.informacionUsuario['tipo'] == 'Comprador':
-                pass
+                self.seleccionarAccionComprador()
             elif self.informacionUsuario['tipo'] == 'Vendedor':
-                pass
+                self.seleccionarAccionVendedor()
         print("Se ha cerrado la aplicacion")
 
 
 def main():
     terminal = Terminal()
-    terminal.comenzar()
+    terminal.correr()
 
 
 if __name__ == "__main__":

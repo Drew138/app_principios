@@ -1,5 +1,6 @@
 from .controlador import Controlador
 import requests
+import os
 
 
 class ControladorProducto(Controlador):
@@ -11,5 +12,15 @@ class ControladorProducto(Controlador):
     def setVendedor(self, vendedor):
         self.vendedor = vendedor
 
+    def getVendedor(self):
+        return self.vendedor
+
     def obtenerProductos(self):
-        pass
+        url = os.path.join(
+            self.host,
+            f"productos?vendedor={self.vendedor}",
+        )
+        response = requests.get(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
+        self.productos = [response.content]

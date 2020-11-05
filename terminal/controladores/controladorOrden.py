@@ -1,5 +1,6 @@
 from .controlador import Controlador
 import requests
+import os
 
 
 class ControladorOrden(Controlador):
@@ -7,20 +8,31 @@ class ControladorOrden(Controlador):
     def __init__(self):
         super(Controlador).__init__()
         self.vendedor = ""
-        self.productos = {}
+        self.orden = {}
 
     def seleccionarVendedor(self, vendedor):
         self.vendedor = vendedor
         self.productos = {}
 
     def agregarProducto(self, producto, cantidad):
-        pass
+        self.productos[producto] = cantidad
 
     def realizarOrden(self):
-        pass
-
-    def verEstadoOrden(self):
-        pass
+        url = os.path.join(
+            self.host,
+            f"orden/",
+        )
+        response = requests.post(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
+        response.content
 
     def verOrdenes(self):
-        pass
+        url = os.path.join(
+            self.host,
+            f"orden/",
+        )
+        response = requests.get(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
+        self.orden = [response.content]

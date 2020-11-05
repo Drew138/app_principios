@@ -10,21 +10,14 @@ class ControladorUsuario(Controlador):
         super(Controlador).__init__()
         self.usuario = ""
         self.contraseña = ""
-        self.refresh = ""
-        self.jwt = ""
         self.informacionUsuario = {}
+        self.vendedores = []
 
     def setContraseña(self, contraseña):
         self.contraseña = contraseña
 
     def setUsuario(self, usuario):
         self.usuario = usuario
-
-    def setJWT(self, jwt):
-        self.jwt = jwt
-
-    def setRefresh(self, refresh):
-        self.refresh = refresh
 
     def setInformacionUsuario(self, informacionUsuario):
         self.informacionUsuario = informacionUsuario
@@ -53,7 +46,7 @@ class ControladorUsuario(Controlador):
             establecimiento = input("Ingrese el nombre de su establecimiento")
             user["establecimiento"] = establecimiento
         response = requests.post(direccion, user)
-        if response.status_code == 201:
+        if response.status_code != 201:
             print(response.reason)
             accion = input("Desea volver a intentarlo (Si/No): ")
             while accion != 'Si' and accion != 'No':
@@ -73,17 +66,24 @@ class ControladorUsuario(Controlador):
         url = "api/auth/login/"
         direccion = os.path.join(self.host, url)
         response = requests.post(direccion, credenciales)
-        self.setJWT(response['access'])
-        self.setRefresh(response['refresh'])
+        Controlador.setJWT(response['access'])
+        Controlador.setRefresh(response['refresh'])
         self.setInformacionUsuario(response['user'])
 
     def refrescarJWT(self):
         url = 'api/auth/refresh'
         direccion = os.path.join(self.host, url)
-        headers = {"Authorization": f"Bearer {self.refresh}"}
+        headers = {"Authorization": f"Bearer {Controlador.getRefresh()}"}
         response = requests.post(direccion, headers=headers)
-        self.setJWT(response['access'])
-        self.setRefresh(response['refresh'])
+        Controlador.setJWT(response['access'])
+        Controlador.setRefresh(response['refresh'])
 
     def obtenerVendedores(self):
-        pass
+        url = os.path.join(
+            self.host,
+            f"usuarios",
+        )
+        response = requests.get(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
+        self.vendedores = [response.content]
