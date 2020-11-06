@@ -36,7 +36,7 @@ class RegistroView(generics.ListAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        refresh = RefreshToken.for_user(self.request.user)  # JWT token
+        refresh = RefreshToken.for_user(user)  # JWT token
         return Response({
             "user": custom_serializers.RegistroSerializer(
                 user,
@@ -57,6 +57,8 @@ class ProductoView(viewsets.ModelViewSet):
             vendedor__establecimiento=vendedor)
         return queryset
 
+    
+
 
 class OrdenView(viewsets.ModelViewSet):
 
@@ -71,3 +73,6 @@ class OrdenView(viewsets.ModelViewSet):
             queryset = custom_models.Orden.objects.filter(
                 producto__vendedor=self.request.user).filter(completado=False)
         return queryset
+
+    
+
