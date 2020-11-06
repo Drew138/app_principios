@@ -18,20 +18,14 @@ class ControladorOrden(Controlador):
         self.productos[producto] = cantidad
 
     def realizarOrden(self):
-        url = os.path.join(
-            self.host,
-            f"orden/",
-        )
+        url = ControladorOrden.host + "/orden/"
         response = requests.post(
             url,
             headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
         response.content
 
     def verOrdenes(self):
-        url = os.path.join(
-            self.host,
-            f"orden/",
-        )
+        url = ControladorOrden.host + "/orden"
         response = requests.get(
             url,
             headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
