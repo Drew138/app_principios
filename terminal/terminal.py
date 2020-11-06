@@ -1,6 +1,6 @@
 import requests
 import os
-import prettytable
+from prettytable import PrettyTable
 import getpass
 from controladores.controladorUsuario import ControladorUsuario
 from controladores.controladorProducto import ControladorProducto
@@ -18,11 +18,15 @@ class Terminal:
         pass
 
     def mostrarInformacionVendedor(self):
-        table1.fieldnames = ["nombre", "telefono", "direccion", "establecimiento"]
+        table1 = PrettyTable()
+        table1.field_names = ["nombre", "telefono","tipo" ,"establecimiento", "direccion"]
         table1.add_row([field for field in self.controladorProducto.getInformacionVendedor().values()])
+        print("Informacion de vendedor asociado")
         print(table1)
-        table2 = prettytable()
-        table2.fieldnames = ["Marca", "Producto", "Precio", "Disponibilidad"]
+        table2 = PrettyTable()
+        if not self.controladorProducto.getProductos():
+            print("No hay productos disponibles")
+        table2.field_names = ["Marca", "Producto", "Precio", "Disponibilidad"]
         for producto in self.controladorProducto.getProductos():
             table.add_row(producto)
         print(table2)
@@ -32,9 +36,13 @@ class Terminal:
 
     def verVendedores(self):
         self.controladorUsuario.obtenerVendedores()
-        print(ControladorUsuario.vendedores)
-        vendedor = input("Seleccione un vendedor: ")
+        self.mostrarVendedores()
+        vendedor = input("Seleccione un vendedor (Nombre de Establecimiento): ")
         self.controladorProducto.setVendedor(vendedor)
+        for vend in self.controladorUsuario.getInformacionVendedores():
+                if vend["establecimiento"] == vendedor:
+                    self.controladorProducto.setInformacionVendedor(vend)
+                    break
         while not (self.controladorProducto.getVendedor() in self.controladorUsuario.vendedores):
             print("Vendedor inválido, seleccione de nuevo")
             print(ControladorUsuario.vendedores)
@@ -76,21 +84,27 @@ class Terminal:
         self.controladorOrden.verOrdenes()
 
     def mostrarInformacionComprador(self):
-        table = prettytable()
-        table.fieldnames = ["Marca", "Producto", "Precio", "Disponibilidad"]
+        table = PrettyTable()
+        table.field_names = ["Marca", "Producto", "Precio", "Disponibilidad"]
         # TODO Mostrar información comprador
         print(table)
 
-    
+    def mostrarVendedores(self):
+        table = PrettyTable()
+        table.field_names = ["nombre", "telefono","tipo" ,"establecimiento", "direccion"]
+        for vendedor in self.controladorUsuario.getInformacionVendedores():
+            table.add_row([field for field in vendedor.values()])
+        print(table)
+
 
     def mostrarDisponibilidadProducto(self):
-        table = prettytable()
-        table.fieldnames = ["Marca", "Producto", "Precio", "Disponibilidad"]
+        table = PrettyTable()
+        table.field_names = ["Marca", "Producto", "Precio", "Disponibilidad"]
         # TODO Hacer solicitud de productos
         print(table)
 
     def mostrarInformacionOrden(self):
-        table = prettytable()
+        table = PrettyTable()
         table.fieldnames = ["Productos", "Cantidades", "Costos"]
         # TODO Mostrar información de órden
         print(table)
@@ -107,7 +121,7 @@ class Terminal:
         if accion == 'Ordenes':
             self.verOrdenes()
         elif accion == "Registrar":
-            self.controladorPoductos.registrarProducto(self.controladorUsuario.getInformacionUsuario())
+            self.controladorProducto.registrarProducto(self.controladorUsuario.getInformacionUsuario())
         else:
             self.interfacesAbiertas = 0
 

@@ -1,7 +1,7 @@
 from .controlador import Controlador
 import requests
 import os
-
+import json
 
 class ControladorProducto(Controlador):
     def __init__(self):
@@ -20,11 +20,15 @@ class ControladorProducto(Controlador):
         self.informacionVendedor = informacionVendedor
 
     def obtenerProductos(self):
-        url = ControladorProducto.host + f"/productos?vendedor={self.vendedor}",
+        url = ControladorProducto.host + "/api/productos"
+        parameters = {"vendedor": self.vendedor}
         response = requests.get(
             url,
-            headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
-        self.productos = [response.content] # TODO cambiar para remover vendedor asociado
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'},
+            params=parameters
+            )
+        response_dict = json.loads(response.text)
+        self.productos = response_dict # TODO cambiar para remover vendedor asociado
 
     def getInformacionVendedor(self):
         return self.informacionVendedor
@@ -44,7 +48,8 @@ class ControladorProducto(Controlador):
             assert type(marca) is str
             assert type(disponibilidad) is int
         except Exception:
-            self.registrarProducto()
+            self.registrarProducto(informacionUsuario)
+            return
         data = {
             "nombre":nombre, 
             "precio":precio, 

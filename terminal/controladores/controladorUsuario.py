@@ -13,7 +13,7 @@ class ControladorUsuario(Controlador):
         self.contraseña = ""
         self.informacionUsuario = {}
         self.informacionVendedores = []
-        self.vendedores[]
+        self.vendedores = []
 
     def setContraseña(self, contraseña):
         self.contraseña = contraseña
@@ -55,6 +55,7 @@ class ControladorUsuario(Controlador):
             user["establecimiento"] = establecimiento
         response = requests.post(url, data=user)
         if response.status_code != 200:
+            print("Error en el servidor o en las credenciales")
             accion = input("Desea volver a intentarlo (Si/No): ").capitalize()
             while accion != 'Si' and accion != 'No':
                 print("Accion invalida, Intente de nuevo")
@@ -63,6 +64,7 @@ class ControladorUsuario(Controlador):
                 self.crearCuenta()
             else:
                 self.terminar()
+            return
         response_dict = json.loads(response.text)    
         ControladorUsuario.setJWT(response_dict["access"])
         ControladorUsuario.setRefresh(response_dict["refresh"])
@@ -86,9 +88,16 @@ class ControladorUsuario(Controlador):
         response = requests.post(url, data=credenciales)
         if response.status_code != 200:
             print("Credenciales incorrectas, intente de nuevo")
-            self.autenticar()
-        response_dict = json.loads(response.text) 
-        print(response_dict)     
+            accion = input("Desea volver a intentarlo (Si/No): ").capitalize()
+            while accion != 'Si' and accion != 'No':
+                print("Accion invalida, Intente de nuevo")
+                accion = input("Desea volver a intentarlo (Si/No): ").capitalize()
+            if accion == "Si":
+                self.autenticar()
+            else:
+                self.terminar()
+            return
+        response_dict = json.loads(response.text)   
         Controlador.setJWT(response_dict['access'])
         Controlador.setRefresh(response_dict['refresh'])
         headers = {"Authorization": f"Bearer {ControladorUsuario.getJWT()}"}
@@ -114,9 +123,14 @@ class ControladorUsuario(Controlador):
 
     def obtenerVendedores(self):
         url = ControladorUsuario.host + "/api/usuarios"
-    
+
         response = requests.get(
             url,
             headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
-        self.InformacionVendedores = [response.content]
-        self.vendedores = map(lambda x : x["establecimiento"], self.InformacionVendedores)
+        
+        response_dict = json.loads(response.text)
+        self.informacionVendedores = response_dict
+        if not self.informacionVendedores:
+            self.vendedores = []
+        else:
+            self.vendedores = map(lambda x : x["establecimiento"], self.informacionVendedores)
