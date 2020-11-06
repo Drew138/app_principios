@@ -44,9 +44,9 @@ class ControladorProducto(Controlador):
         disponibilidad = input("Ingrese la cantidad de productos disponibles: ")
         try:
             assert type(nombre) is str
-            assert type(precio) is int
+            assert type(int(precio)) is int
             assert type(marca) is str
-            assert type(disponibilidad) is int
+            assert type(int(disponibilidad)) is int
         except Exception:
             self.registrarProducto(informacionUsuario)
             return
