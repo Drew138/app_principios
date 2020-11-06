@@ -4,10 +4,6 @@ from django.contrib.auth.models import AbstractUser
 
 class Usuario(AbstractUser):
 
-    MASCULINO = 'M'
-    FEMENINO = 'F'
-    INDEFINIDO = 'I'
-    
     COMPRADOR = 'comprador'
     VENDEDOR = 'vendedor'
     OPCIONES_TIPO = (

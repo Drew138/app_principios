@@ -28,7 +28,7 @@ class UsersView(generics.GenericAPIView):
         return queryset
 
 
-class RegistroView(generics.GenericAPIView):
+class RegistroView(generics.ListAPIView):
 
     serializer_class = custom_serializers.RegistroSerializer
 
