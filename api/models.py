@@ -13,7 +13,7 @@ class Usuario(AbstractUser):
 
     telefono = models.IntegerField(default=0)
     direccion = models.CharField(max_length=30)
-    establecimiento = models.CharField(max_length=30, default="n/a") # tODO cambiar a unique= true
+    establecimiento = models.CharField(max_length=30, default="n/a")
     tipo = models.CharField(
         max_length=10, choices=OPCIONES_TIPO, default=COMPRADOR)
 

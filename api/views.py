@@ -57,8 +57,6 @@ class ProductoView(viewsets.ModelViewSet):
             vendedor__establecimiento=vendedor)
         return queryset
 
-    
-
 
 class OrdenView(viewsets.ModelViewSet):
 
@@ -73,6 +71,3 @@ class OrdenView(viewsets.ModelViewSet):
             queryset = custom_models.Orden.objects.filter(
                 producto__vendedor=self.request.user).filter(completado=False)
         return queryset
-
-    
-
