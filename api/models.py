@@ -7,11 +7,7 @@ class Usuario(AbstractUser):
     MASCULINO = 'M'
     FEMENINO = 'F'
     INDEFINIDO = 'I'
-    OPCIONES_GENERO = (
-        (MASCULINO, 'Masculino'),
-        (FEMENINO, 'Femenino'),
-        (INDEFINIDO, 'Indefinido'),
-    )
+    
     COMPRADOR = 'comprador'
     VENDEDOR = 'vendedor'
     OPCIONES_TIPO = (
@@ -19,8 +15,6 @@ class Usuario(AbstractUser):
         (VENDEDOR, 'Vendedor'),
     )
 
-    genero = models.CharField(
-        max_length=1, choices=OPCIONES_GENERO, default=INDEFINIDO)
     telefono = models.IntegerField(default=0)
     direccion = models.CharField(max_length=30)
     establecimiento = models.CharField(max_length=30, default="n/a")

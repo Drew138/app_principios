@@ -5,16 +5,16 @@ from . import views
 
 
 auth_views = [
-    path('auth/register', views.RegisterAPI.as_view()),
+    path('auth/register', views.RegistroView.as_view()),
     path('auth/user', views.UserAPI.as_view()),
     path('auth/login/', TokenObtainPairView.as_view()),
     path('auth/token/refresh/', TokenRefreshView.as_view()),
+    path('usuarios', views.UsersView.as_view()),
 ]
 
 router = routers.DefaultRouter()
-router.register("usuarios", views.UsersView, "usuarios")
-router.register("productos", views.UsersView, "productos")
-router.register("ordenes", views.UsersView, "ordenes")
+router.register("productos", views.ProductoView, "productos")
+router.register("ordenes", views.OrdenView, "ordenes")
 
 
 urlpatterns = auth_views + router.urls

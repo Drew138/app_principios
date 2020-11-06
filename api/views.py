@@ -15,16 +15,16 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 
-class UsersView(generics.RetrieveAPIView):
+class UsersView(generics.GenericAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = custom_serializers.UsuarioSerializer
 
     def get_queryset(self):
         if self.request.user.tipo == "comprador":
-            queryset = custom_models.Usuario.objects.filter(tipo="vendedor")
+            queryset = custom_models.Usuario.objects.all().filter(tipo="vendedor")
         else:
-            queryset = custom_models.Usuario.objects.filter(tipo="comprador")
+            queryset = custom_models.Usuario.objects.all().filter(tipo="comprador")
         return queryset
 
 
@@ -38,7 +38,7 @@ class RegistroView(generics.GenericAPIView):
         user = serializer.save()
         refresh = RefreshToken.for_user(self.request.user)  # JWT token
         return Response({
-            "user": custom_serializers.RegisterVibroUserSerializer(
+            "user": custom_serializers.RegistroSerializer(
                 user,
                 context=self.get_serializer_context()).data,
             "refresh": str(refresh),

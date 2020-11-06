@@ -2,16 +2,16 @@ import requests
 import os
 import prettytable
 import getpass
-from .controladores.controladorUsuario import ControladorUsuario
-from .controladores.controladorProducto import ControladorProducto
-from .controladores.controladorOrden import ControladorOrden
+from controladores.controladorUsuario import ControladorUsuario
+from controladores.controladorProducto import ControladorProducto
+from controladores.controladorOrden import ControladorOrden
 
 
 class Terminal:
     def __init__(self):
         self.controladorUsuario = ControladorUsuario()
-        self.controladorProducto = ControladorProducto(self.controladorUsuario)
-        self.controladorOrden = ControladorOrden(self.controladorProducto)
+        self.controladorProducto = ControladorProducto()
+        self.controladorOrden = ControladorOrden()
         self.interfacesAbiertas = 1
 
     def realizarOrden(self):
@@ -42,11 +42,12 @@ class Terminal:
 
     def seleccionarAccionComprador(self):
         accion = input(
-            "Desea ver vendedores, realizar una órden o salir (Vendedores/Órden/Salir): ").capitalize()
-        while (accion != 'Vendedores') or (accion != 'Órden') or (accion != 'Salir'):
+            "Desea ver vendedores, realizar una órden o salir (Vendedores/Orden/Salir): ").capitalize()
+        acciones = {"Vendedores", "Orden", "Salir"}
+        while not accion in acciones:
             print("Accion invalida, vuelva a intentar")
             accion = input(
-                "Desea ver vendedores, realizar una órden o salir (Vendedores/Órden/Salir): ").capitalize()
+                "Desea ver vendedores, realizar una órden o salir (Vendedores/Orden/Salir): ").capitalize()
         if accion == 'Vendedores':
             self.verVendedores()
         elif accion == "Órden":
@@ -106,7 +107,8 @@ class Terminal:
 
     def comenzar(self):
         accion = input(
-            "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
+            "Desea ingresar o registrarse (Ingresar/Registrarse): ")
+        accion = accion.capitalize()
         while accion != "Ingresar" and accion != "Registrarse":
             print("Acción inválida, intenta de nuevo")
             accion = input(
@@ -119,9 +121,9 @@ class Terminal:
     def correr(self):
         self.comenzar()
         while self.interfacesAbiertas:
-            if self.informacionUsuario['tipo'] == 'Comprador':
+            if self.controladorUsuario.getInformacionUsuario()["tipo"] == 'comprador':
                 self.seleccionarAccionComprador()
-            elif self.informacionUsuario['tipo'] == 'Vendedor':
+            elif self.controladorUsuario.getInformacionUsuario()["tipo"] == 'vendedor':
                 self.seleccionarAccionVendedor()
         print("Se ha cerrado la aplicación")
 

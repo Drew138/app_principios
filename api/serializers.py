@@ -8,11 +8,9 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = custom_models.Usuario
         fields = [
-            'id',
             'username',
             'telefono',
             "tipo",
-            "genero",
             "establecimiento",
             "direccion"
         ]
@@ -21,17 +19,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
 # Register Serializer
 class RegistroSerializer(serializers.ModelSerializer):
 
+    establecimiento = serializers.CharField(required=False)
+
     class Meta:
-        model = custom_models.VibroUser
+        model = custom_models.Usuario
         fields = [
             'username',
-            'first_name',
-            'last_name',
             'password',
-            'genero',
             'telefono',
             'direccion',
-            'ciudad',
             'establecimiento',
             'tipo',
         ]

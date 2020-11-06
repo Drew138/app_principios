@@ -1,9 +1,7 @@
 class Controlador:
     jwt = ""
     refresh = ""
-
-    def __init__(self):
-        self.host = "http://127.0.0.1.8000"
+    host = "http://127.0.0.1:8000"
 
     @classmethod
     def setJWT(cls, jwt):
