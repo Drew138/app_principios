@@ -15,7 +15,7 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 
-class UsersView(generics.GenericAPIView):
+class UsersView(generics.ListAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = custom_serializers.UsuarioSerializer
