@@ -19,6 +19,8 @@ pip
 
 para descargar dependencias correr el comando `pipenv install`
 
+para crear una base de datos `pipenv run python manage.py migrate`
+
 para correr el servidor `pipenv run python manage.py runserver`
 
 para iniciar la terminal `cd terminal && pipenv run python terminal.py`
