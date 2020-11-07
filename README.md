@@ -4,12 +4,10 @@ Aplicacion por medio de terminal que permite comunicaciones entre vendedores y c
 
 ## Integrantes
 
-```
-* Mateo Lopera Ortiz
-* Andres Salazar Galeano
-* Mateo Muñoz Cadavid
-* Alejandro Torres Muñoz
-```
+> - Mateo Lopera Ortiz
+> - Andres Salazar Galeano
+> - Mateo Muñoz Cadavid
+> - Alejandro Torres Muñoz
 
 requistos:
 
