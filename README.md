@@ -1,11 +1,11 @@
 # Compras Digitales
 
-Aplicacion por medio de terminal que permite comunicaciones entre vendedores y compradores.
+Aplicación por medio de terminal que permite la comunicación entre vendedores y compradores.
 
 ## Integrantes
 
 > - Mateo Lopera Ortiz
-> - Andres Salazar Galeano
+> - Andrés Salazar Galeano
 > - Mateo Muñoz Cadavid
 > - Alejandro Torres Muñoz
 
