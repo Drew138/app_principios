@@ -18,13 +18,15 @@ class ControladorOrden(Controlador):
         self.orden.append(producto)
 
     def realizarOrden(self):
-        url = ControladorOrden.host + "/orden/"
-        for ords in orden:
+        url = ControladorOrden.host + "/api/ordenes/"
+        for ords in self.orden:
             response = requests.post(
                 url,
                 headers={'Authorization': f'Bearer {Controlador.getJWT()}'}, data=ords)
-            if reponse.status_code != 201:
+            if response.status_code != 201:
                 print("Error al enviar orden")
+            else:
+                print("Orden enviada correctamente")
 
     def obtenerOrdenes(self):
         url = ControladorOrden.host + "/api/ordenes"

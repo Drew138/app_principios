@@ -64,10 +64,10 @@ class ControladorProducto(Controlador):
             "marca":marca, 
             "disponibilidad":disponibilidad
             }
-        headers = {"Authorization": f"Bearer {ControladorProducto.getJWT()}"}
+        headers = {"Authorization": f"Bearer {Controlador.getJWT()}"}
         url = ControladorProducto.host + "/api/productos/"
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(url, data=data, headers=headers)
         if response.status_code != 201:
-            print("Erorr al crear producto")
+            print("Error al crear producto")
         else:
             print("Producto creado exitosamente")
