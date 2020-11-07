@@ -88,7 +88,6 @@ class Terminal:
                             }
                             self.controladorOrden.agregarProducto(nuevoProducto)
                             break
-                print(self.controladorOrden.orden)
                 accion = input("Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
 
 

@@ -69,6 +69,5 @@ class ControladorProducto(Controlador):
         response = requests.post(url, data=data, headers=headers)
         if response.status_code != 201:
             print("Error al crear producto")
-            print(response.content)
         else:
             print("Producto creado exitosamente")

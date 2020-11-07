@@ -25,7 +25,6 @@ class ControladorOrden(Controlador):
                 headers={'Authorization': f'Bearer {Controlador.getJWT()}'}, data=ords)
             if response.status_code != 201:
                 print("Error al enviar orden")
-                print(response.content)
             else:
                 print("Orden enviada correctamente")
 

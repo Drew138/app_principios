@@ -66,8 +66,7 @@ class ControladorUsuario(Controlador):
             else:
                 return "no"
             return
-        response_dict = json.loads(response.text)
-        print(response_dict)    
+        response_dict = json.loads(response.text)    
         Controlador.setJWT(response_dict["access"])
         Controlador.setRefresh(response_dict["refresh"])
         
