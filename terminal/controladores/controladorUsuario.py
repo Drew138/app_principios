@@ -43,6 +43,7 @@ class ControladorUsuario(Controlador):
         direccion = input("Ingrese su direccion: ")
         tipo = input("Ingrese su tipo de usuario (Comprador/Vendedor): ").lower()
         while tipo != "comprador" and tipo != "vendedor":
+            print("Opcion no valida, vuelva a intentarlo")
             tipo = input("Ingrese su tipo de usuario (Comprador/Vendedor): ").lower()
         url = ControladorUsuario.host + '/api/auth/register'
         user = {"username": username,
@@ -50,8 +51,8 @@ class ControladorUsuario(Controlador):
                 "telefono": telefono,
                 "direccion": direccion,
                 "tipo": tipo}
-        if tipo == "Vendedor":
-            establecimiento = input("Ingrese el nombre de su establecimiento")
+        if tipo == "vendedor":
+            establecimiento = input("Ingrese el nombre de su establecimiento: ")
             user["establecimiento"] = establecimiento
         response = requests.post(url, data=user)
         if response.status_code != 200:
@@ -63,11 +64,12 @@ class ControladorUsuario(Controlador):
             if accion == "Si":
                 self.crearCuenta()
             else:
-                self.terminar()
+                return "no"
             return
-        response_dict = json.loads(response.text)    
-        ControladorUsuario.setJWT(response_dict["access"])
-        ControladorUsuario.setRefresh(response_dict["refresh"])
+        response_dict = json.loads(response.text)
+        print(response_dict)    
+        Controlador.setJWT(response_dict["access"])
+        Controlador.setRefresh(response_dict["refresh"])
         
         self.informacionUsuario = {
             "username": response_dict["user"]["username"],
@@ -95,9 +97,9 @@ class ControladorUsuario(Controlador):
             if accion == "Si":
                 self.autenticar()
             else:
-                self.terminar()
+                return "no"
             return
-        response_dict = json.loads(response.text)   
+        response_dict = json.loads(response.text)  
         Controlador.setJWT(response_dict['access'])
         Controlador.setRefresh(response_dict['refresh'])
         headers = {"Authorization": f"Bearer {ControladorUsuario.getJWT()}"}

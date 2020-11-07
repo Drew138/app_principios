@@ -59,13 +59,13 @@ class OrdenSerializer(serializers.ModelSerializer):
     producto = ProductoSerializer(required=False)
 
     class Meta:
-        model = custom_models.Producto
+        model = custom_models.Orden
         fields = '__all__'
     
     def create(self, validated_data):
-        producto = validated_data["producto"]
-        instanciaProducto = custom_models.Producto.objects.filter(vendedor=self.context['request'].user).filter(nombre=producto["nombre"])
+        producto = validated_data.get("producto")
+        instanciaProducto = custom_models.Producto.objects.filter(vendedor=self.context['request'].user).filter(nombre=producto)
         validated_data.pop("producto")
-        orden_instance = custom_models.Orden.objects.create(**validated_data, producto=producto,comprador=self.context['request'].user)
+        orden_instance = custom_models.Orden.objects.create(**validated_data, producto=instanciaProducto, comprador=self.context['request'].user)
         orden_instance.save()
         return orden_instance

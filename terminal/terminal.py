@@ -15,7 +15,7 @@ class Terminal:
         self.interfacesAbiertas = 1
 
     def realizarOrden(self):
-        pass
+        self.controladorOrden.realizarOrden()
 
 
 
@@ -60,7 +60,6 @@ class Terminal:
                     break
         while not (self.controladorProducto.getVendedor() in self.controladorUsuario.vendedores):
             print("Vendedor inválido, seleccione de nuevo")
-            print(self.controladorUsuario.vendedores)
             vendedor = input("Seleccione un vendedor: ")
             self.controladorProducto.setVendedor(vendedor)
             for vend in self.controladorUsuario.getInformacionVendedores():
@@ -85,12 +84,12 @@ class Terminal:
                                 "costo": (prod["precio"] * cantidad),
                                 "cantidad": cantidad,
                                 "completado": False,
-                                "producto": prod
+                                "producto": prod["nombre"]
                             }
                             self.controladorOrden.agregarProducto(nuevoProducto)
                             break
-                accion = input("Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
                 print(self.controladorOrden.orden)
+                accion = input("Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
 
 
     def seleccionarAccionComprador(self):
@@ -122,7 +121,8 @@ class Terminal:
         table = PrettyTable()
         table.field_names = ["nombre", "telefono","tipo" ,"establecimiento", "direccion"]
         for vendedor in self.controladorUsuario.getInformacionVendedores():
-            table.add_row([field for field in vendedor.values()])
+            if vendedor:
+                table.add_row([field for field in vendedor.values()])
         print(table)
 
 
@@ -136,7 +136,8 @@ class Terminal:
         table = PrettyTable()
         table.field_names = ["Comprador","Costos", "Cantidades", "Productos", "Vendedor"]
         for orden in self.controladorOrden.orden:
-            table.add_row([field for field in orden.values()])
+            if table:
+                table.add_row([field for field in orden.values()])
         print(table)
 
     def seleccionarAccionVendedor(self):
@@ -169,9 +170,11 @@ class Terminal:
             accion = input(
                 "Desea ingresar o registrarse (Ingresar/Registrarse): ").capitalize()
         if accion == "Ingresar":
-            self.controladorUsuario.autenticar()
+            if self.controladorUsuario.autenticar() == "no":
+                self.interfacesAbiertas = 0
         else:
-            self.controladorUsuario.crearCuenta()
+            if self.controladorUsuario.crearCuenta() == "no":
+                self.interfacesAbiertas = 0
 
     def correr(self):
         self.comenzar()
