@@ -22,15 +22,15 @@ class Terminal:
         table1.field_names = ["nombre", "telefono",
                               "tipo", "establecimiento", "direccion"]
         table1.add_row(
-            [field for field in self.controladorProducto.getInformacionVendedor().values()])
+            [field[1] for field in self.controladorProducto.getInformacionVendedor().items() if field[0] != "id"])
         print("Informacion de vendedor asociado")
         print(table1)
         table2 = PrettyTable()
         if not self.controladorProducto.getProductos():
             print("No hay productos disponibles")
-        table2.field_names = ["Nombre", "Marca", "Precio", "Disponibilidad"]
+        table2.field_names = ["Nombre", "Precio", "Marca", "Disponibilidad"]
         for producto in self.controladorProducto.getProductos():
-            table2.add_row([field for field in producto.values()])
+            table2.add_row([field[1] for field in producto.items() if field[0] != "id"])
         print("Informacion de productos ofrecidos por este vendedor")
         print(table2)
 
@@ -87,7 +87,7 @@ class Terminal:
                                 "costo": (prod["precio"] * cantidad),
                                 "cantidad": cantidad,
                                 "completado": False,
-                                "producto": prod["id"]
+                                "producto": prod["id"],
                             }
                             self.controladorOrden.agregarProducto(
                                 nuevoProducto)
@@ -112,6 +112,9 @@ class Terminal:
 
     def verOrdenes(self):
         self.controladorOrden.obtenerOrdenes()
+        establecimiento = self.controladorUsuario.getInformacionUsuario()["establecimiento"]
+        self.controladorProducto.setVendedor(establecimiento)
+        self.controladorProducto.obtenerProductos()
         self.mostrarInformacionOrden()
 
     def mostrarInformacionComprador(self):
@@ -126,7 +129,7 @@ class Terminal:
                              "tipo", "establecimiento", "direccion"]
         for vendedor in self.controladorUsuario.getInformacionVendedores():
             if vendedor:
-                table.add_row([field for field in vendedor.values()])
+                table.add_row([field[1] for field in vendedor.items() if field[0] != "id"])
         print(table)
 
     def mostrarDisponibilidadProducto(self):
@@ -137,11 +140,23 @@ class Terminal:
 
     def mostrarInformacionOrden(self):
         table = PrettyTable()
-        table.field_names = ["Comprador", "Costos",
-                             "Cantidades", "Productos", "Vendedor"]
+        table.field_names = ["Comprador", "telefono", "Producto", "Costos",
+                             "Cantidades",  "Completado"]
         for orden in self.controladorOrden.orden:
             if table:
-                table.add_row([field for field in orden.values()])
+                row = []
+                for field in orden.items():
+                    if field[0] != "id":
+                        if field[0] == "comprador":
+                            row.append(field[1]["username"])
+                            row.append(field[1]["telefono"])
+                        elif field[0] == "producto":
+                            for prod in self.controladorProducto.getInformacionProductos():
+                                if field[1] == prod["id"]:
+                                    row.append(prod["nombre"])
+                        else:
+                            row.append(field[1])
+                table.add_row(row)
         print(table)
 
     def seleccionarAccionVendedor(self):

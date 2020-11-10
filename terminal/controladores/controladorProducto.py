@@ -34,7 +34,6 @@ class ControladorProducto(Controlador):
         response_dict = json.loads(response.text)
         self.informacionProductos = response_dict
         for producto in response_dict:
-            producto.pop("id")
             producto.pop("vendedor")
         self.productos = response_dict
 
