@@ -17,12 +17,12 @@ class Terminal:
     def realizarOrden(self):
         self.controladorOrden.realizarOrden()
 
-
-
     def mostrarInformacionVendedor(self):
         table1 = PrettyTable()
-        table1.field_names = ["nombre", "telefono","tipo" ,"establecimiento", "direccion"]
-        table1.add_row([field for field in self.controladorProducto.getInformacionVendedor().values()])
+        table1.field_names = ["nombre", "telefono",
+                              "tipo", "establecimiento", "direccion"]
+        table1.add_row(
+            [field for field in self.controladorProducto.getInformacionVendedor().values()])
         print("Informacion de vendedor asociado")
         print(table1)
         table2 = PrettyTable()
@@ -52,12 +52,13 @@ class Terminal:
     def verVendedores(self):
         self.controladorUsuario.obtenerVendedores()
         self.mostrarVendedores()
-        vendedor = input("Seleccione un vendedor (Nombre de Establecimiento): ")
+        vendedor = input(
+            "Seleccione un vendedor (Nombre de Establecimiento): ")
         self.controladorProducto.setVendedor(vendedor)
         for vend in self.controladorUsuario.getInformacionVendedores():
-                if vend["establecimiento"] == vendedor:
-                    self.controladorProducto.setInformacionVendedor(vend)
-                    break
+            if vend["establecimiento"] == vendedor:
+                self.controladorProducto.setInformacionVendedor(vend)
+                break
         while not (self.controladorProducto.getVendedor() in self.controladorUsuario.vendedores):
             print("Vendedor inválido, seleccione de nuevo")
             vendedor = input("Seleccione un vendedor: ")
@@ -70,10 +71,12 @@ class Terminal:
         if accion == "Si":
             self.controladorProducto.obtenerProductos()
             self.mostrarInformacionVendedor()
-            accion = input("Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
+            accion = input(
+                "Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
             while accion == "Si":
                 producto = input("Ingrese el producto que desea agregar: ")
-                cantidad = input("Ingrese la cantidad que desea agregar de este producto: ")
+                cantidad = input(
+                    "Ingrese la cantidad que desea agregar de este producto: ")
                 cantidad = int(cantidad)
                 if not self.verificarDisponibilidadProducto(producto, cantidad):
                     continue
@@ -84,12 +87,13 @@ class Terminal:
                                 "costo": (prod["precio"] * cantidad),
                                 "cantidad": cantidad,
                                 "completado": False,
-                                "producto": prod["nombre"]
+                                "producto": prod["id"]
                             }
-                            self.controladorOrden.agregarProducto(nuevoProducto)
+                            self.controladorOrden.agregarProducto(
+                                nuevoProducto)
                             break
-                accion = input("Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
-
+                accion = input(
+                    "Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
 
     def seleccionarAccionComprador(self):
         accion = input(
@@ -118,12 +122,12 @@ class Terminal:
 
     def mostrarVendedores(self):
         table = PrettyTable()
-        table.field_names = ["nombre", "telefono","tipo" ,"establecimiento", "direccion"]
+        table.field_names = ["nombre", "telefono",
+                             "tipo", "establecimiento", "direccion"]
         for vendedor in self.controladorUsuario.getInformacionVendedores():
             if vendedor:
                 table.add_row([field for field in vendedor.values()])
         print(table)
-
 
     def mostrarDisponibilidadProducto(self):
         table = PrettyTable()
@@ -133,7 +137,8 @@ class Terminal:
 
     def mostrarInformacionOrden(self):
         table = PrettyTable()
-        table.field_names = ["Comprador","Costos", "Cantidades", "Productos", "Vendedor"]
+        table.field_names = ["Comprador", "Costos",
+                             "Cantidades", "Productos", "Vendedor"]
         for orden in self.controladorOrden.orden:
             if table:
                 table.add_row([field for field in orden.values()])
@@ -157,8 +162,6 @@ class Terminal:
 
     def verificarInformacionUsuario(self):
         pass
-
-    
 
     def comenzar(self):
         accion = input(

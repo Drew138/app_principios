@@ -45,9 +45,10 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = custom_models.Producto
         fields = '__all__'
-    
+
     def create(self, validated_data):
-        producto_instance = custom_models.Producto.objects.create(**validated_data, vendedor=self.context['request'].user)
+        producto_instance = custom_models.Producto.objects.create(
+            **validated_data, vendedor=self.context['request'].user)
         producto_instance.save()
         return producto_instance
 
@@ -56,16 +57,14 @@ class OrdenSerializer(serializers.ModelSerializer):
 
     comprador = UsuarioSerializer(required=False)
 
-    producto = ProductoSerializer(required=False)
+    producto = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = custom_models.Orden
         fields = '__all__'
-    
+
     def create(self, validated_data):
-        producto = validated_data.get("producto")
-        instanciaProducto = custom_models.Producto.objects.filter(vendedor=self.context['request'].user).filter(nombre=producto)
-        validated_data.pop("producto")
-        orden_instance = custom_models.Orden.objects.create(**validated_data, producto=instanciaProducto, comprador=self.context['request'].user)
+        orden_instance = custom_models.Orden.objects.create(
+            **validated_data, comprador=self.context['request'].user)
         orden_instance.save()
         return orden_instance
