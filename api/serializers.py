@@ -72,3 +72,13 @@ class OrdenSerializer(serializers.ModelSerializer):
             **validated_data, producto=prod, comprador=self.context['request'].user)
         orden_instance.save()
         return orden_instance
+
+class listarOrdenSerializer(serializers.ModelSerializer):
+
+    comprador = UsuarioSerializer()
+
+    producto = ProductoSerializer()
+
+    class Meta:
+        model = custom_models.Orden
+        fields = '__all__'

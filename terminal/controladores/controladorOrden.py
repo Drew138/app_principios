@@ -19,6 +19,8 @@ class ControladorOrden(Controlador):
 
     def realizarOrden(self):
         url = ControladorOrden.host + "/api/ordenes/"
+        if not self.orden:
+            print("No ha seleccionado ningun producto")
         for ords in self.orden:
             response = requests.post(
                 url,
@@ -35,3 +37,16 @@ class ControladorOrden(Controlador):
             headers={'Authorization': f'Bearer {Controlador.getJWT()}'})
         response_dict = json.loads(response.text)
         self.orden = response_dict
+    
+
+    def cancelarOrden(self, id_orden):
+        url = ControladorOrden.host + "/api/ordenes/"
+        response = requests.delete(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'},
+            params={"id": id_orden}
+            )
+        if response.status_code == 204:
+            print("Orden borrada correctamente")
+        else:
+            print("Error al borrar orden")
