@@ -25,6 +25,7 @@ class ControladorOrden(Controlador):
             response = requests.post(
                 url,
                 headers={'Authorization': f'Bearer {Controlador.getJWT()}'}, data=ords)
+            # print(ords) #! bug
             if response.status_code != 201:
                 print("Error al enviar orden")
             else:
@@ -38,6 +39,17 @@ class ControladorOrden(Controlador):
         response_dict = json.loads(response.text)
         self.orden = response_dict
     
+    def despachar(self, id_orden):
+        url = ControladorOrden.host + "/api/ordenes/"
+        response = requests.patch(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'},
+            params={"id": id_orden}
+            )
+        if response.status_code == 201:
+            print("Orden despachada correctamente")
+        else:
+            print("Error al despachar orden")
 
     def cancelarOrden(self, id_orden):
         url = ControladorOrden.host + "/api/ordenes/"

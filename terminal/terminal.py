@@ -21,7 +21,6 @@ class Terminal:
         table1 = PrettyTable()
         table1.field_names = ["nombre", "telefono",
                               "tipo", "establecimiento", "direccion"]
-        print(self.controladorProducto.informacionProductos)
         table1.add_row(
             [field[1] for field in self.controladorProducto.getInformacionVendedor().items() if field[0] != "id"])
         print("Informacion de vendedor asociado")
@@ -29,9 +28,9 @@ class Terminal:
         table2 = PrettyTable()
         if not self.controladorProducto.getProductos():
             print("No hay productos disponibles")
-        table2.field_names = ["Nombre", "Precio", "Marca", "Disponibilidad"]
+        table2.field_names = ["id", "Nombre", "Precio", "Marca", "Disponibilidad"]
         for producto in self.controladorProducto.getProductos():
-            table2.add_row([field[1] for field in producto.items() if field[0] != "id"])
+            table2.add_row([field[1] for field in producto.items()])
         print("Informacion de productos ofrecidos por este vendedor")
         print(table2)
 
@@ -93,6 +92,7 @@ class Terminal:
                             self.controladorOrden.agregarProducto(
                                 nuevoProducto)
                             break
+                    # print(self.controladorOrden.orden) # !bug
                 accion = input(
                     "Desea agregar un nuevo producto a su órden (Si/No): ").capitalize()
 
@@ -102,7 +102,7 @@ class Terminal:
             print("el id ingresado no es numerico, intente de nuevo")
             accion = input("Desea Regresar a las opciones anteriores (Si/No)").capitalize()
             if accion == "Si":
-                break
+                return
             id_orden = input("Ingrese el \"id\" de la orden que desea cancelar: ")
         id_orden = int(id_orden)
         self.controladorOrden.cancelarOrden(id_orden)
@@ -110,6 +110,8 @@ class Terminal:
     def verProductosVendedor(self):
         vendedor = self.controladorUsuario.getInformacionUsuario()["establecimiento"]
         self.controladorProducto.setVendedor(vendedor)
+        usuario = self.controladorUsuario.getInformacionUsuario().copy()
+        self.controladorProducto.setInformacionVendedor(usuario)
         self.controladorProducto.obtenerProductos()
         self.mostrarInformacionVendedor()
 
@@ -186,24 +188,44 @@ class Terminal:
 
     def mostrarInformacionOrdenVendedor(self):
         table = PrettyTable()
-        table.field_names = ["Comprador", "telefono", "Producto", "Costos",
+        table.field_names = ["id", "Comprador", "telefono", "Producto", "Costos",
                              "Cantidades",  "Completado"]
         for orden in self.controladorOrden.orden:
             if table:
                 row = []
                 for field in orden.items():
-                    if field[0] != "id":
-                        if field[0] == "comprador":
-                            row.append(field[1]["username"])
-                            row.append(field[1]["telefono"])
-                        elif field[0] == "producto":
-                            for prod in self.controladorProducto.getInformacionProductos():
-                                if field[1] == prod["id"]:
-                                    row.append(prod["nombre"])
-                        else:
-                            row.append(field[1])
+                    if field[0] == "comprador":
+                        row.append(field[1]["username"])
+                        row.append(field[1]["telefono"])
+                    elif field[0] == "producto":
+                        for prod in self.controladorProducto.getInformacionProductos():
+                            if field[1] == prod["id"]:
+                                row.append(prod["nombre"])
+                    else:
+                        row.append(field[1])
                 table.add_row(row)
         print(table)
+
+    def quitarProducto(self):
+        id_producto = input("Ingrese el id del producto que desea quitar: ")
+        while not id_producto.isnumeric():
+            print("id no valido")
+            accion = input("Desea volver a intentarlo (Si/No)").capitalize()
+            if accion == "No":
+                return
+            id_producto = input("Ingrese el id del producto que desea quitar: ")
+        id_producto = int(id_producto)
+        self.controladorProducto.borrarProducto(id_producto)
+
+    def despacharOrden(self):
+        id_orden = input("ingrese el id de la orden que desea despachar: ")
+        while not id_orden.isnumeric():
+            print("Id invalido")
+            accion = input("Desea volver a intentarlo? (Si/No): ").capitalize()
+            if accion == "No":
+                return
+        id_orden = int(id_orden)
+        self.controladorOrden.despachar(id_orden)
 
     def seleccionarAccionVendedor(self):
         accion = input(
@@ -219,9 +241,9 @@ class Terminal:
         elif accion == "Registrar":
             self.controladorProducto.registrarProducto()
         elif accion == "Quitar":
-            pass
+            self.quitarProducto()
         elif accion == "Despachar":
-            pass
+            self.despacharOrden()
         elif accion == "Ver":
             self.verProductosVendedor()
         else:

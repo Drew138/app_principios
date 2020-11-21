@@ -42,6 +42,18 @@ class ControladorProducto(Controlador):
 
     def getProductos(self):
         return self.productos
+    
+    def borrarProducto(self, id_producto):
+        url = ControladorProducto.host + "/api/productos/"
+        response = requests.delete(
+            url,
+            headers={'Authorization': f'Bearer {Controlador.getJWT()}'},
+            params={"id": id_producto}
+            )
+        if response.status_code == 204:
+            print("Producto borrado correctamente")
+        else:
+            print("Error al borrar producto")
 
     def registrarProducto(self):
 
