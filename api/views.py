@@ -62,7 +62,7 @@ class ProductoView(viewsets.ModelViewSet):
         id_orden = self.request.query_params.get("id", None)
         if id_orden:
             try:
-                instance = custom_models.Orden.objects.filter(id=id_orden)
+                instance = custom_models.Producto.objects.filter(id=id_orden)
                 self.perform_destroy(instance)
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except Http404:
@@ -101,4 +101,13 @@ class OrdenView(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except Http404:
                 pass
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    def patch(self, request):
+        id_orden = self.request.query_params.get("id", None)
+        if id_orden:
+            orden = custom_models.Orden.objects.filter(id=id_orden).first()
+            orden.completado = True
+            orden.save()
+            return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_404_NOT_FOUND)

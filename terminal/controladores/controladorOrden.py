@@ -22,14 +22,15 @@ class ControladorOrden(Controlador):
         if not self.orden:
             print("No ha seleccionado ningun producto")
         for ords in self.orden:
-            response = requests.post(
-                url,
-                headers={'Authorization': f'Bearer {Controlador.getJWT()}'}, data=ords)
-            # print(ords) #! bug
-            if response.status_code != 201:
-                print("Error al enviar orden")
-            else:
-                print("Orden enviada correctamente")
+            if "producto" in ords:
+                response = requests.post(
+                    url,
+                    headers={'Authorization': f'Bearer {Controlador.getJWT()}'}, data=ords)
+                # print(ords) #! bug
+                if response.status_code != 201:
+                    print("Error al enviar orden")
+                else:
+                    print("Orden enviada correctamente")
 
     def obtenerOrdenes(self):
         url = ControladorOrden.host + "/api/ordenes"

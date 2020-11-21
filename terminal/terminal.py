@@ -165,12 +165,6 @@ class Terminal:
         self.mostrarInformacionOrdenComprador()
 
 
-    def mostrarInformacionComprador(self):
-        table = PrettyTable()
-        table.field_names = ["Marca", "Producto", "Precio", "Disponibilidad"]
-        # TODO Mostrar información comprador
-        print(table)
-
     def mostrarVendedores(self):
         table = PrettyTable()
         table.field_names = ["nombre", "telefono",
@@ -180,11 +174,6 @@ class Terminal:
                 table.add_row([field[1] for field in vendedor.items() if field[0] != "id"])
         print(table)
 
-    def mostrarDisponibilidadProducto(self):
-        table = PrettyTable()
-        table.field_names = ["Marca", "Producto", "Precio", "Disponibilidad"]
-        # TODO Hacer solicitud de productos
-        print(table)
 
     def mostrarInformacionOrdenVendedor(self):
         table = PrettyTable()
@@ -249,9 +238,6 @@ class Terminal:
         else:
             self.interfacesAbiertas = 0
             
-
-    def verificarInformacionUsuario(self):
-        pass
 
     def comenzar(self):
         accion = input(
